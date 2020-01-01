@@ -16,6 +16,7 @@ public class Model {
     // open existing list
     public void openList(String filename) {
         //currentList = // parse XML file and create list from it
+        // notify observers that model has a new list open
     }
     
     // allows view to get access to model's state
