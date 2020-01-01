@@ -1,11 +1,21 @@
 
 package core;
 
-import java.io.PrintWriter;
+import gui.Controller;
 
 public class Main {
     public static void main(String[] args) {
-        List newYearResolutions = new List("New Year Resolutions");
+        Controller controller = new Controller();
+        // Create the view
+        /*View view = new View();
+        JFrame window = new JFrame("to-do list");
+        window.setJMenuBar(view.getMenuBar());
+        window.setContentPane(view);
+        window.pack();
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setVisible(true);*/
+        
+        /*List newYearResolutions = new List("New Year Resolutions");
         newYearResolutions.addTask(new Task("get a computing job"));
         newYearResolutions.addTask(new Task("get a house"));
         newYearResolutions.addTask(new Task("start learning piano"));
@@ -24,6 +34,6 @@ public class Main {
         newYearResolutions.printAsXML(out);
         houseChores.printAsXML(out);
         out.println("</todo>");
-        out.close();
+        out.close();*/
     }
 }
