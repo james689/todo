@@ -1,7 +1,6 @@
 
 package core;
 
-import java.io.PrintWriter;
 import java.util.Collections;
 
 public class List {
@@ -10,7 +9,7 @@ public class List {
     
     public List(String name) {
         this.name = name;
-        tasks = new java.util.ArrayList<Task>();
+        this.tasks = new java.util.ArrayList<Task>();
     }
     
     public String getName() { 
@@ -34,18 +33,14 @@ public class List {
         return Collections.unmodifiableList(tasks);
     }
     
-    // Save this list in XML format
-    public void printAsXML(PrintWriter out) {
-        try {
-            out.println("<list name=\"" + this.getName() + "\">");
-            for (Task task : tasks) {
-                out.println("<task completed=\"" + task.isCompleted() + "\">" + task.getName() + "</task>");
-            }
-            out.println("</list>");
-            out.flush();
+    // return an XML representation of this List
+    public String toXMLString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<list name=\"" + getName() + "\">" + "\n");
+        for (Task task : getTasks()) {
+            sb.append("<task completed=\"" + task.isCompleted() + "\">" + task.getName() + "</task>" + "\n");
         }
-        catch (Exception e) {
-            System.out.println(e);
-        }
+        sb.append("</list>");
+        return sb.toString();
     }
 }
