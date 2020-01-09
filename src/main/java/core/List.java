@@ -1,7 +1,16 @@
 
 package core;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class List {
     private String name;                // the name of this list
@@ -42,5 +51,31 @@ public class List {
         }
         sb.append("</list>");
         return sb.toString();
+    }
+    
+    // returns a List object parsed from an XML file
+    public static List fromXMLFile(File file) throws ParserConfigurationException,
+            SAXException, IOException {
+        List list = null;
+        
+        DocumentBuilder docReader = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document xmlDoc = docReader.parse(file); // will throw an exception if cannot parse input
+        
+        Element rootElement = xmlDoc.getDocumentElement(); // root element is <todo>
+        Element listElement = (Element) rootElement.getElementsByTagName("list").item(0);
+        
+        String listName = listElement.getAttribute("name");
+        list = new List(listName);
+        
+        // iterate through the tasks and add them to the list
+        NodeList nodeList = listElement.getElementsByTagName("task");
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Element taskElement = (Element) nodeList.item(i);
+            Boolean completed = Boolean.valueOf(taskElement.getAttribute("completed"));
+            String taskName = taskElement.getTextContent();
+            list.addTask(new Task(taskName, completed));
+        }
+        
+        return list;
     }
 }

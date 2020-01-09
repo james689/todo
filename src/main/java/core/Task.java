@@ -6,8 +6,12 @@ public class Task {
     boolean completed;      // whether the task has been completed
     
     public Task(String name) {
+        this(name, false);
+    }
+    
+    public Task(String name, boolean completed) {
         this.name = name;
-        this.completed = false;
+        this.completed = completed;
     }
     
     public String getName() {
