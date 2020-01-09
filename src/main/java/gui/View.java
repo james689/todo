@@ -88,11 +88,11 @@ public class View extends JPanel {
                 }
 
                 if (!completedTasksHidden) {
-                    currentListPanel.hideCompletedTasks();
+                    currentListPanel.showCompletedTasks(false);
                     hideCompletedTasksMenuItem.setText("show completed tasks");
                     completedTasksHidden = true;
                 } else {
-                    currentListPanel.showCompletedTasks();
+                    currentListPanel.showCompletedTasks(true);
                     hideCompletedTasksMenuItem.setText("Hide completed tasks");
                     completedTasksHidden = false;
                 }

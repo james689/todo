@@ -27,7 +27,7 @@ class TaskPanel extends JPanel {
         this.parentListPanel = parentListPanel;
         this.theTask = theTask;
         
-        setBackground(Color.RED);
+        //setBackground(Color.RED);
         Border lineBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
         Border emptyBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         setBorder(new CompoundBorder(emptyBorder, lineBorder));
@@ -36,7 +36,6 @@ class TaskPanel extends JPanel {
         checkBox.setSelected(theTask.isCompleted());
         checkBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("check box ticked/unticked");
                 // update underlying task object's completed state
                 theTask.setCompleted(checkBox.isSelected());
             }
@@ -47,7 +46,6 @@ class TaskPanel extends JPanel {
         taskLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println("task name was clicked");
                 renameTask();
             }
         });
@@ -55,7 +53,6 @@ class TaskPanel extends JPanel {
         JButton removeTaskButton = new JButton("Remove task");
         removeTaskButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("remove task button clicked");
                 parentListPanel.removeTask(TaskPanel.this);
             }
         });
@@ -66,7 +63,7 @@ class TaskPanel extends JPanel {
     }
 
     private void renameTask() {
-        String s = (String) JOptionPane.showInputDialog(
+        String taskName = (String) JOptionPane.showInputDialog(
                 this,
                 "Enter task name",
                 "Rename Task",
@@ -75,13 +72,12 @@ class TaskPanel extends JPanel {
                 null,
                 taskLabel.getText());
 
-        if (s == null || s.isEmpty()) {
-            System.out.println("null/empty string");
+        if (taskName == null || taskName.isEmpty()) {
             return;
         }
 
-        taskLabel.setText(s);
-        // change the actual back-end task object as well
+        theTask.setName(taskName);
+        taskLabel.setText(theTask.getName());
     }
     
     public Task getTask() {

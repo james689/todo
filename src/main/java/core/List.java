@@ -4,8 +4,8 @@ package core;
 import java.util.Collections;
 
 public class List {
-    private String name; // the name of this list
-    private java.util.List<Task> tasks; // the tasks of this list
+    private String name;                // the name of this list
+    private java.util.List<Task> tasks; // the tasks in this list
     
     public List(String name) {
         this.name = name;

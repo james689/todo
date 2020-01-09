@@ -2,12 +2,12 @@
 package core;
 
 public class Task {
-    private String name; // name of the task
-    boolean completed; // whether the task has been completed
+    private String name;    // name of the task
+    boolean completed;      // whether the task has been completed
     
     public Task(String name) {
         this.name = name;
-        completed = false;
+        this.completed = false;
     }
     
     public String getName() {
