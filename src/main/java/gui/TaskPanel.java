@@ -26,21 +26,21 @@ class TaskPanel extends JPanel {
     TaskPanel(ListPanel parentListPanel, Task theTask) {
         this.parentListPanel = parentListPanel;
         this.theTask = theTask;
-        
+
         //setBackground(Color.RED);
         Border lineBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
         Border emptyBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         setBorder(new CompoundBorder(emptyBorder, lineBorder));
-        
+
         checkBox = new JCheckBox();
         checkBox.setSelected(theTask.isCompleted());
         checkBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // update underlying task object's completed state
                 theTask.setCompleted(checkBox.isSelected());
+                updateTaskLabel();
             }
         });
-        
+
         taskLabel = new JLabel(theTask.getName());
         taskLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         taskLabel.addMouseListener(new MouseAdapter() {
@@ -56,7 +56,7 @@ class TaskPanel extends JPanel {
                 parentListPanel.removeTask(TaskPanel.this);
             }
         });
-        
+
         add(checkBox);
         add(taskLabel);
         add(removeTaskButton);
@@ -70,16 +70,24 @@ class TaskPanel extends JPanel {
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 null,
-                taskLabel.getText());
+                theTask.getName());
 
         if (taskName == null || taskName.isEmpty()) {
             return;
         }
 
         theTask.setName(taskName);
-        taskLabel.setText(theTask.getName());
+        updateTaskLabel();
     }
-    
+
+    private void updateTaskLabel() {
+        if (theTask.isCompleted()) {
+            taskLabel.setText("<html><strike>" + theTask.getName() + "</strike></html>");
+        } else {
+            taskLabel.setText(theTask.getName());
+        }
+    }
+
     public Task getTask() {
         return theTask;
     }

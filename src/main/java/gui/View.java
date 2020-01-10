@@ -23,6 +23,7 @@ public class View extends JPanel {
     private boolean completedTasksHidden = false;
 
     private List currentList; // the current list being edited
+    
     private ListPanel currentListPanel; // graphical representation of current list
     private File editFile = null;  // The file that is being edited.  Set when user opens
     // or saves a file.  Value is null if no file is being edited. 
