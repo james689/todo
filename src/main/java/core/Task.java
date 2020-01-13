@@ -14,6 +14,12 @@ public class Task {
         this.completed = completed;
     }
     
+    // copy constructor
+    public Task(Task anotherTask) {
+        this.name = anotherTask.name;
+        this.completed = anotherTask.completed;
+    }
+    
     public String getName() {
         return name;
     }

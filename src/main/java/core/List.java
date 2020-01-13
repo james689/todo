@@ -21,6 +21,15 @@ public class List {
         this.tasks = new java.util.ArrayList<Task>();
     }
     
+    // copy constructor
+    public List(List anotherList) {
+        this.name = anotherList.name;
+        this.tasks = new java.util.ArrayList<Task>();
+        for (Task aTask : anotherList.getTasks()) {
+            this.tasks.add(new Task(aTask));
+        }
+    }
+    
     public String getName() { 
         return name; 
     }
@@ -77,5 +86,38 @@ public class List {
         }
         
         return list;
+    }
+    
+    // determines if two lists are equal
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        
+        List otherList = (List) obj;
+
+        if (!otherList.getName().equals(this.getName())) {
+            return false; // different list name
+        }
+        
+        java.util.List<Task> otherListTasks = otherList.getTasks();
+        java.util.List<Task> thisListTasks = this.getTasks();
+        if (otherListTasks.size() != thisListTasks.size()) {
+            return false; // different number of tasks in list
+        }
+        
+        for (int i = 0; i < otherListTasks.size(); i++) {
+            Task otherListTask = otherListTasks.get(i);
+            Task thisListTask = thisListTasks.get(i);
+            if (!otherListTask.getName().equals(thisListTask.getName())) {
+                return false;
+            }
+            if (otherListTask.isCompleted() != thisListTask.isCompleted()) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }

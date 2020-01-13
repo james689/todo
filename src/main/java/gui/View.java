@@ -22,8 +22,9 @@ public class View extends JPanel {
     private JMenuItem hideCompletedTasksMenuItem;
     private boolean completedTasksHidden = false;
 
-    private List currentList; // the current list being edited
-    
+    private List currentList = null; // the current list being edited
+    private List savedList = null;
+
     private ListPanel currentListPanel; // graphical representation of current list
     private File editFile = null;  // The file that is being edited.  Set when user opens
     // or saves a file.  Value is null if no file is being edited. 
@@ -118,8 +119,7 @@ public class View extends JPanel {
     }
 
     private void doNewList() {
-        // need to add functionality to ask user if they want to
-        // save their changes to current list before creating a new list
+        checkUnsavedChanges();
 
         // get list name from the user
         String listName = (String) JOptionPane.showInputDialog(
@@ -159,12 +159,28 @@ public class View extends JPanel {
             renameListMenuItem.setEnabled(true);
             hideCompletedTasksMenuItem.setEnabled(true);
             saveListMenuItem.setEnabled(true);
-        } 
+        }
+    }
+
+    private void checkUnsavedChanges() {
+        if (currentList == null) {
+            return; // no list is open so there cannot be any unsaved changes
+        }
+
+        // there's already a list open, check to see if there have been any
+        // changes to it
+        if (!currentList.equals(savedList)) {
+            // ask user if they want to save changes to list
+            if (JOptionPane.showConfirmDialog(null, "Save changes to current list?", "WARNING - UNSAVED CHANGES",
+                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                doSaveList();
+            }
+        }
     }
 
     private void doOpenList() {
-        // need to add functionality here to ask user if they want to
-        // save their changes to current list before opening a new list
+        checkUnsavedChanges();
+        
         JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(this);
         if (returnVal != JFileChooser.APPROVE_OPTION) {
@@ -192,7 +208,7 @@ public class View extends JPanel {
         }
         currentListPanel = new ListPanel(currentList);
         add(currentListPanel);
-        
+
         updateMenuItems();
 
         revalidate();
@@ -208,15 +224,15 @@ public class View extends JPanel {
         if (editFile != null) {
             fileDialog.setSelectedFile(editFile);
         }
-        
+
         int returnVal = fileDialog.showSaveDialog(this);
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             System.out.println("user cancelled saving file");
             return; // user did not select a file
         }
-        
+
         File selectedFile = fileDialog.getSelectedFile();
-             
+
         PrintWriter out;
         try {
             FileWriter stream = new FileWriter(selectedFile);
@@ -225,7 +241,7 @@ public class View extends JPanel {
             System.out.println(e);
             return;
         }
-        
+
         try {
             out.println("<?xml version=\"1.0\"?>");
             out.println("<todo version=\"1.0\">");
@@ -234,6 +250,7 @@ public class View extends JPanel {
             out.flush();
             out.close();
             editFile = selectedFile;
+            savedList = new List(currentList);
         } catch (Exception e) {
             System.out.println(e);
         }
