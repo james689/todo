@@ -16,14 +16,19 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 
-class TaskPanel extends JPanel {
+/**
+ * The TaskPanel class represents a graphical representation of a Task. 
+ * It holds a reference to the underlying Task object it represents.
+ */
+public class TaskPanel extends JPanel {
 
-    private Task theTask; // the Task this TaskPanel represents
-    private ListPanel parentListPanel; // the list panel this task panel belongs to
+    private Task theTask;               // the Task this TaskPanel represents
+    private ListPanel parentListPanel;  // the list panel this task panel is contained within
     private JLabel taskLabel;
     private JCheckBox checkBox;
 
-    TaskPanel(ListPanel parentListPanel, Task theTask) {
+    // constructor
+    public TaskPanel(ListPanel parentListPanel, Task theTask) {
         this.parentListPanel = parentListPanel;
         this.theTask = theTask;
 
@@ -63,7 +68,7 @@ class TaskPanel extends JPanel {
     }
 
     private void renameTask() {
-        String taskName = (String) JOptionPane.showInputDialog(
+        String newTaskName = (String) JOptionPane.showInputDialog(
                 this,
                 "Enter task name",
                 "Rename Task",
@@ -72,11 +77,11 @@ class TaskPanel extends JPanel {
                 null,
                 theTask.getName());
 
-        if (taskName == null || taskName.isEmpty()) {
+        if (newTaskName == null || newTaskName.isEmpty()) {
             return;
         }
 
-        theTask.setName(taskName);
+        theTask.setName(newTaskName);
         updateTaskLabel();
     }
 

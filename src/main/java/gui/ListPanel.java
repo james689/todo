@@ -2,7 +2,6 @@ package gui;
 
 import core.List;
 import core.Task;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -19,20 +18,23 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
-// a ListPanel is a visual representation of a List. It holds a reference
-// to the underlying List object it represents.
-class ListPanel extends JPanel {
+/**
+ * The ListPanel class represents a graphical representation of a List. 
+ * It holds a reference to the underlying List object it represents.
+ */
+public class ListPanel extends JPanel {
 
-    private List list; // the List this ListPanel wraps/represents
+    private List list; // the List this ListPanel represents
     private JLabel listNameLabel; 
-    private JPanel taskPanelContainer; 
-    private Font largeFont = new Font("Serif", Font.BOLD, 25); // font used for the list's name
     private JLabel numTasksLabel;
+    private JPanel taskPanelContainer; 
+    private Font largeFont = new Font("Serif", Font.BOLD, 25); 
 
-    ListPanel(List list) {
+    // constructor
+    public ListPanel(List list) {
         this.list = list;
         //setBackground(Color.BLUE);
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); // stack components vertically
 
         listNameLabel = new JLabel(list.getName(), SwingConstants.LEFT);
         listNameLabel.setFont(largeFont);
@@ -40,7 +42,7 @@ class ListPanel extends JPanel {
         listNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // allow user to edit name of list when they click on listNameLabel 
+                // allow user to edit the list's name when they click mouse on listNameLabel 
                 renameList();
             }
         });
@@ -71,7 +73,7 @@ class ListPanel extends JPanel {
     }
 
     public void renameList() {
-        String name = (String) JOptionPane.showInputDialog(
+        String newListName = (String) JOptionPane.showInputDialog(
                 this,
                 "Enter new list name",
                 "Rename List",
@@ -81,13 +83,13 @@ class ListPanel extends JPanel {
                 list.getName());
 
         // if user enters an empty string or cancels the dialog don't rename
-        // the list. Could warn the user about the list having to have a non-empty
-        // name here if you want.
-        if (name == null || name.isEmpty()) {
+        // the list. Could warn the user about the list not allowing non-empty name 
+        // here. 
+        if (newListName == null || newListName.isEmpty()) {
             return;
         }
 
-        list.setName(name);
+        list.setName(newListName);
         listNameLabel.setText(list.getName());
     }
 
@@ -103,13 +105,10 @@ class ListPanel extends JPanel {
 
     public void removeTask(TaskPanel taskPanel) {
         // delete the task panel from the GUI
-        taskPanelContainer.remove(taskPanel); // remove from the JPanel container 
-        
+        taskPanelContainer.remove(taskPanel);  
         // delete the task from the underlying list
         list.removeTask(taskPanel.getTask());
-        
         updateNumTasksLabel();
-        
         revalidate();
         repaint();
     }
