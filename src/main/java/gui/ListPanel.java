@@ -29,6 +29,8 @@ public class ListPanel extends JPanel {
     private JLabel numTasksLabel;
     private JPanel taskPanelContainer; 
     private Font largeFont = new Font("Serif", Font.BOLD, 25); 
+    private boolean completedTasksVisible = true; // determines whether this
+    // list panel will display completed tasks or not
 
     // constructor
     public ListPanel(List list) {
@@ -94,13 +96,17 @@ public class ListPanel extends JPanel {
     }
 
     // if b == true, show completed tasks, otherwise hide completed tasks.
-    public void showCompletedTasks(boolean b) {
+    public void setCompletedTasksVisible(boolean b) {
+        this.completedTasksVisible = b;
+        
         for (Component component : taskPanelContainer.getComponents()) {
             TaskPanel taskPanel = (TaskPanel) component;
-            if (taskPanel.getTask().isCompleted()) {
-                taskPanel.setVisible(b);
-            }
+            taskPanel.update();
         }
+    }
+    
+    public boolean isCompletedTasksVisible() {
+        return completedTasksVisible;
     }
 
     public void removeTask(TaskPanel taskPanel) {

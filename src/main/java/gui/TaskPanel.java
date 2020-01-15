@@ -42,7 +42,7 @@ public class TaskPanel extends JPanel {
         checkBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 theTask.setCompleted(checkBox.isSelected());
-                updateTaskLabel();
+                update();
             }
         });
 
@@ -82,14 +82,20 @@ public class TaskPanel extends JPanel {
         }
 
         theTask.setName(newTaskName);
-        updateTaskLabel();
+        update();
     }
 
-    private void updateTaskLabel() {
+    public void update() {
         if (theTask.isCompleted()) {
+            // a completed task should have strike through text
             taskLabel.setText("<html><strike>" + theTask.getName() + "</strike></html>");
+            // a completed task may also be invisible, check with the parent list panel
+            this.setVisible(parentListPanel.isCompletedTasksVisible());
         } else {
+            // no strike through text for an uncompleted task
             taskLabel.setText(theTask.getName());
+            // an uncompleted task is always visible
+            this.setVisible(true);
         }
     }
 

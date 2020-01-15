@@ -14,27 +14,32 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+/**
+ * The View class represents the main GUI of the program. 
+ */
 public class View extends JPanel {
 
     private JMenuBar menuBar;
     private JMenuItem renameListMenuItem;
     private JMenuItem saveListMenuItem;
     private JMenuItem hideCompletedTasksMenuItem;
-    private boolean completedTasksHidden = false;
 
     private List currentList = null; // the current list being edited
-    private List savedList = null;
+    private List savedList = null; // the state of the current list at the time of last save.
+    // the savedList can be compared to the currentList to see if there have been any
+    // changes since the last save.
 
     private ListPanel currentListPanel; // graphical representation of current list
-    private File editFile = null;  // The file that is being edited.  Set when user opens
-    // or saves a file.  Value is null if no file is being edited. 
+    private File editFile = null;  // The file that is being edited. This is set when the user opens
+    // or saves a file. Value is null if no file is being edited. 
 
+    // constructor
     public View() {
         setPreferredSize(new Dimension(500, 500));
         createMenuBar();
     }
 
-    // the JFrame needs access to the menuBar
+    // the outer JFrame needs access to the menuBar
     public JMenuBar getMenuBar() {
         return menuBar;
     }
@@ -92,14 +97,12 @@ public class View extends JPanel {
                     return;
                 }
 
-                if (!completedTasksHidden) {
-                    currentListPanel.showCompletedTasks(false);
+                if (currentListPanel.isCompletedTasksVisible()) {
+                    currentListPanel.setCompletedTasksVisible(false);
                     hideCompletedTasksMenuItem.setText("show completed tasks");
-                    completedTasksHidden = true;
                 } else {
-                    currentListPanel.showCompletedTasks(true);
+                    currentListPanel.setCompletedTasksVisible(true);
                     hideCompletedTasksMenuItem.setText("Hide completed tasks");
-                    completedTasksHidden = false;
                 }
             }
         });
@@ -141,7 +144,6 @@ public class View extends JPanel {
         // remove the old ListPanel from the View (if there is one)
         if (currentListPanel != null) {
             remove(currentListPanel); // (Container.remove(Component))
-            System.out.println("removing old list panel");
         }
 
         currentListPanel = new ListPanel(currentList);
@@ -184,8 +186,7 @@ public class View extends JPanel {
         JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(this);
         if (returnVal != JFileChooser.APPROVE_OPTION) {
-            System.out.println("user did not select a file to open");
-            return;
+            return; // user did not select a file to open
         }
 
         File file = fc.getSelectedFile();
@@ -204,7 +205,6 @@ public class View extends JPanel {
 
         if (currentListPanel != null) {
             remove(currentListPanel); // remove the old list panel from the View (Container.remove(Component))
-            System.out.println("removing old list panel");
         }
         currentListPanel = new ListPanel(currentList);
         add(currentListPanel);
@@ -227,7 +227,6 @@ public class View extends JPanel {
 
         int returnVal = fileDialog.showSaveDialog(this);
         if (returnVal != JFileChooser.APPROVE_OPTION) {
-            System.out.println("user cancelled saving file");
             return; // user did not select a file
         }
 
@@ -250,7 +249,8 @@ public class View extends JPanel {
             out.flush();
             out.close();
             editFile = selectedFile;
-            savedList = new List(currentList);
+            savedList = new List(currentList); // create a copy of the current list
+            // at the time of save
         } catch (Exception e) {
             System.out.println(e);
         }
