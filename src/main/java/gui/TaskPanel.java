@@ -65,6 +65,9 @@ public class TaskPanel extends JPanel {
         add(checkBox);
         add(taskLabel);
         add(removeTaskButton);
+        
+        update(); // update the task panel when it is first created to ensure
+        // consistency
     }
 
     private void renameTask() {
