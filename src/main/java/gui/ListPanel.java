@@ -33,8 +33,9 @@ public class ListPanel extends JPanel {
     // list panel will display completed tasks or not
 
     // constructor
-    public ListPanel(List list) {
+    public ListPanel(List list, boolean completedTasksVisible) {
         this.list = list;
+        this.completedTasksVisible = completedTasksVisible;
         //setBackground(Color.BLUE);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); // stack components vertically
 

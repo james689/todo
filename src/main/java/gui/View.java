@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
- * The View class represents the main GUI of the program. 
+ * The View class represents the main GUI of the program.
  */
 public class View extends JPanel {
 
@@ -24,6 +24,7 @@ public class View extends JPanel {
     private JMenuItem saveListMenuItem;
     private JMenuItem hideCompletedTasksMenuItem;
 
+    private boolean completedTasksVisible = true;
     private List currentList = null; // the current list being edited
     private List savedList = null; // the state of the current list at the time of last save.
     // the savedList can be compared to the currentList to see if there have been any
@@ -93,17 +94,7 @@ public class View extends JPanel {
         hideCompletedTasksMenuItem.setEnabled(false);
         hideCompletedTasksMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (currentList == null) { // no list open
-                    return;
-                }
-
-                if (currentListPanel.isCompletedTasksVisible()) {
-                    currentListPanel.setCompletedTasksVisible(false);
-                    hideCompletedTasksMenuItem.setText("show completed tasks");
-                } else {
-                    currentListPanel.setCompletedTasksVisible(true);
-                    hideCompletedTasksMenuItem.setText("Hide completed tasks");
-                }
+                doHideShowCompletedTasks();
             }
         });
 
@@ -146,7 +137,7 @@ public class View extends JPanel {
             remove(currentListPanel); // (Container.remove(Component))
         }
 
-        currentListPanel = new ListPanel(currentList);
+        currentListPanel = new ListPanel(currentList, completedTasksVisible);
         add(currentListPanel);
 
         updateMenuItems();
@@ -182,7 +173,7 @@ public class View extends JPanel {
 
     private void doOpenList() {
         checkUnsavedChanges();
-        
+
         JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(this);
         if (returnVal != JFileChooser.APPROVE_OPTION) {
@@ -206,7 +197,7 @@ public class View extends JPanel {
         if (currentListPanel != null) {
             remove(currentListPanel); // remove the old list panel from the View (Container.remove(Component))
         }
-        currentListPanel = new ListPanel(currentList);
+        currentListPanel = new ListPanel(currentList, completedTasksVisible);
         add(currentListPanel);
 
         updateMenuItems();
@@ -253,6 +244,22 @@ public class View extends JPanel {
             // at the time of save
         } catch (Exception e) {
             System.out.println(e);
+        }
+    }
+
+    private void doHideShowCompletedTasks() {
+        if (currentList == null) { // no list open
+            return;
+        }
+
+        if (completedTasksVisible) {
+            completedTasksVisible = false;
+            currentListPanel.setCompletedTasksVisible(false);
+            hideCompletedTasksMenuItem.setText("show completed tasks");
+        } else {
+            completedTasksVisible = true;
+            currentListPanel.setCompletedTasksVisible(true);
+            hideCompletedTasksMenuItem.setText("Hide completed tasks");
         }
     }
 }
